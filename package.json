@@ -1,0 +1,31 @@
+{
+  "name": "tile-match-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified...\" && exit 1"
+  },
+  "dependencies": {
+    "npm": "^5.8.0",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "path": "^0.12.7",
+    "style-loader": "^0.20.3",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.1"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2016"
+    ]
+  }
+}
