@@ -1,5 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TileMatch from './components/TileMatch'
+import CardMatch from './components/CardMatch'
 
-ReactDOM.render(<TileMatch />, document.getElementById('app'))
+ReactDOM.render(<CardMatch />, document.getElementById('app'))
