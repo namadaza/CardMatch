@@ -18,6 +18,11 @@ p {
 
 .controls {
   height: 10vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  height: 80vh;
 }
 .cards {
   display: flex;
@@ -45,4 +50,11 @@ p {
 
 .card--unselected {
   background-color: #8d0000;
+}
+
+button {
+  font-family: 'Bree Serif', serif;
+  background-color: black;
+  color: white;
+  width: 30vh;
 }
