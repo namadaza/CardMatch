@@ -64,4 +64,6 @@ button {
   background-color: black;
   color: white;
   width: 30vh;
+  margin-right: 15px;
+  margin-left: 15px;
 }

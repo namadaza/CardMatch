@@ -15,8 +15,6 @@ const cards = [ "Diamond A", "Club A", "Heart A", "Spade A",
                 "Diamond Q", "Club Q", "Heart  Q", "Spade Q",
                 "Diamond K", "Club K", "Heart K", "Spade K" ];
 
-
-
 const cardsToMatch = 2;
 
 class CardMatch extends React.Component {
@@ -35,6 +33,7 @@ class CardMatch extends React.Component {
     this.toggleAiMode = this.toggleAiMode.bind(this);
     this.shouldContinuePlay = this.shouldContinuePlay.bind(this);
     this.aiMove = this.aiMove.bind(this);
+    this.resetGame = this.resetGame.bind(this);
     this.ignoreUserClicks = false;
     let compSeen = {};
     let ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "Q", "K"];
@@ -231,10 +230,28 @@ class CardMatch extends React.Component {
       ai: !prevState.ai
     }));
   }
+  resetGame() {
+    let compSeen = {};
+    let ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "Q", "K"];
+    for (let i = 0; i < ranks.length; i += 1) {
+      compSeen[ranks[i]] = [];
+    }
+    this.setState({
+      currentCards: [],
+      selectedCards: [],
+      matchedCards: [],
+      compSeen: compSeen,
+      compMatchedCards: [],
+      ai: false
+    }, () => {
+      this.shuffleCards();
+    });
+  }
   render() {
     let cardIndex = 0;
     let clickEvent = this.pickCard;
     let toggleEvent = this.toggleAiMode;
+    let resetEvent = this.resetGame;
     return (
       <div className="card-match-app">
         <Stats matchedCards={this.state.matchedCards} cards={this.state.currentCards} aimode={this.state.ai} aiMatchedCards={this.state.compMatchedCards}/>
@@ -248,7 +265,7 @@ class CardMatch extends React.Component {
                          ignoreUserClicks={this.state.ignoreUserClicks} />
           })}
         </div>
-        <Controls toggleEvent={toggleEvent} aimode={this.state.ai} />
+        <Controls toggleEvent={toggleEvent} resetEvent={resetEvent} aimode={this.state.ai} />
       </div>
     )
   }
@@ -308,17 +325,25 @@ class Stats extends React.Component {
 class Controls extends React.Component {
   constructor(props) {
     super();
-    this.processClick = this.processClick.bind(this);
+    this.processToggle = this.processToggle.bind(this);
+    this.processReset = this.processReset.bind(this);
   }
-  processClick() {
+  processToggle() {
     this.props.toggleEvent();
+  }
+  processReset() {
+    this.props.resetEvent();
   }
   render() {
     return (
       <div className="controls">
         <div className="toggleai"
-             onClick={this.processClick}>
+             onClick={this.processToggle}>
           <button>{this.props.aimode ? "Turn Off AI" : "Turn On AI"}</button>
+        </div>
+        <div className="resetEvent"
+             onClick={this.processReset}>
+          <button>Reset Game</button>
         </div>
       </div>
     )
