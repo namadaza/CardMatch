@@ -33,7 +33,6 @@ class CardMatch extends React.Component {
     this.shuffleCards = this.shuffleCards.bind(this);
     this.pickCard = this.pickCard.bind(this);
     this.toggleAiMode = this.toggleAiMode.bind(this);
-    this.resetGame = this.resetGame.bind(this);
     this.shouldContinuePlay = this.shouldContinuePlay.bind(this);
     this.aiMove = this.aiMove.bind(this);
     this.ignoreUserClicks = false;
@@ -120,11 +119,13 @@ class CardMatch extends React.Component {
         }
         else {
           //First of selected cards, show card face
-          tempCurrentCards[curSelectedCards[0]].position = "selected";
-          this.setState({
-            selectedCards: curSelectedCards,
-            currentCards: tempCurrentCards
-          })
+          if (this.ignoreUserClicks !== true) {
+            tempCurrentCards[curSelectedCards[0]].position = "selected";
+            this.setState({
+              selectedCards: curSelectedCards,
+              currentCards: tempCurrentCards
+            });
+          }
         }
       }
     }
@@ -138,7 +139,7 @@ class CardMatch extends React.Component {
     }
   }
   aiMove(continuePlay) {
-    while (continuePlay) {
+    if (continuePlay) {
       //Store previous number of matches to compare
       let prevMatches = this.state.compMatchedCards.length;
       //Computer makes two selections
@@ -168,18 +169,30 @@ class CardMatch extends React.Component {
       //If match, update state
       let aiSelectedCards = [firstSelectedCard, secondSelectedCard];
       let tempCurrentCards = this.state.currentCards;
-      tempCurrentCards[firstSelectedCard].position = "selected";
-      tempCurrentCards[secondSelectedCard].position = "selected";
-      tempCurrentCards = this.isMatch(aiSelectedCards, tempCurrentCards, "ai");
-      //Continue playing if found successful match
-      let currMatches = this.state.compMatchedCards.length;
-      continuePlay = this.shouldContinuePlay(prevMatches, currMatches);
-      //Update seen accordingly, no match with given random cards
-      if (continuePlay == false) {
-        //AI picked two non-matching cards, update seen variables
-        this.state.compSeen[firstRank].push(firstSelectedCard);
-        this.state.compSeen[secondRank].push(secondSelectedCard);
-      }
+      tempCurrentCards[firstSelectedCard].position = "ai";
+      tempCurrentCards[secondSelectedCard].position = "ai";
+      this.setState({
+        currentCards: tempCurrentCards
+      })
+      setTimeout(() => {
+        //isMatch returns the corrected tempCurrentCards if no match found
+        tempCurrentCards = this.isMatch(aiSelectedCards, tempCurrentCards, "ai");
+        this.setState({
+          currentCards: tempCurrentCards
+        }, () => {
+          //Determine if player can continue picking cards
+          let currMatches = this.state.compMatchedCards.length;
+          continuePlay = this.shouldContinuePlay(prevMatches, currMatches);
+          if (continuePlay == false) {
+            //AI picked two non-matching cards, update seen variables
+            this.state.compSeen[firstRank].push(firstSelectedCard);
+            this.state.compSeen[secondRank].push(secondSelectedCard);
+          }
+          else {
+            this.aiMove(continuePlay);
+          }
+        });
+      }, 750);
     }
   }
   isMatch(candidateSelectedCards, candidateCurrentCards, player) {
@@ -187,7 +200,6 @@ class CardMatch extends React.Component {
     let cardRank1 = candidateCurrentCards[candidateSelectedCards[0]].type.slice(-1);
     let cardRank2 = candidateCurrentCards[candidateSelectedCards[1]].type.slice(-1);
 
-    console.log(player, " COMPARING TWO CARDS: ", cardRank1, cardRank2);
     if (cardRank1 == cardRank2) {
       //Selected cards form a pair
       candidateCurrentCards[candidateSelectedCards[0]].position = "hidden";
@@ -214,8 +226,6 @@ class CardMatch extends React.Component {
       return candidateCurrentCards;
     }
   }
-  resetGame() {
-  }
   toggleAiMode() {
     this.setState(prevState => ({
       ai: !prevState.ai
@@ -225,7 +235,6 @@ class CardMatch extends React.Component {
     let cardIndex = 0;
     let clickEvent = this.pickCard;
     let toggleEvent = this.toggleAiMode;
-    let resetEvent = this.resetGame;
     return (
       <div className="card-match-app">
         <Stats matchedCards={this.state.matchedCards} cards={this.state.currentCards} aimode={this.state.ai} aiMatchedCards={this.state.compMatchedCards}/>
@@ -239,7 +248,7 @@ class CardMatch extends React.Component {
                          ignoreUserClicks={this.state.ignoreUserClicks} />
           })}
         </div>
-        <Controls resetEvent={resetEvent} toggleEvent={toggleEvent} aimode={this.state.ai} />
+        <Controls toggleEvent={toggleEvent} aimode={this.state.ai} />
       </div>
     )
   }

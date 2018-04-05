@@ -54,6 +54,11 @@ p {
   background-color: #8d0000;
 }
 
+.card--ai {
+  background-color: white;
+  color: white;
+}
+
 button {
   font-family: 'Bree Serif', serif;
   background-color: black;

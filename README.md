@@ -3,4 +3,7 @@
 Web app hosts a game card matching game.
 
 ### Launch Instructions
-Run 'npm start' command.
+'npm install'
+'npm start'
+
+Haven't configured any production environments, running/testing app strictly on webpack dev server.
