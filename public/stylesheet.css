@@ -5,6 +5,7 @@ body {
   background-color: #076324;
   margin-left: 5%;
   margin-right: 5%;
+  height: 100vh;
 }
 
 p {
@@ -13,23 +14,24 @@ p {
   color: white;
 }
 .stats {
-  height: 10vh;
+  height: 25%;
 }
 
 .controls {
-  height: 10vh;
+  height: 10%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  height: 80vh;
+  margin-top: 5%;
 }
+
 .cards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  height: 80vh;
+  height: 60%;
 }
 
 .card {
